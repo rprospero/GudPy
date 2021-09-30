@@ -108,7 +108,7 @@ class GudrunFile:
         Assign objects from the file to the attributes of the class.
     write_out(overwrite=False)
         Writes out the string representation of the GudrunFile to a file.
-    dcs(path=''):
+    dcs(path='', purge=True):
         Call gudrun_dcs on the path supplied. If the path is its
         default value, then use the path attribute as the path.
     process():
@@ -1255,7 +1255,7 @@ class GudrunFile:
         f.write(str(self))
         f.close()
 
-    def dcs(self, path=''):
+    def dcs(self, path='', purge=True):
         """
         Purge detectors and then call gudrun_dcs on the path supplied.
         If the path is its default value,
@@ -1267,6 +1267,8 @@ class GudrunFile:
             Overwrite the initial file? (default is False).
         path : str, optional
             Path to parse from (default is empty, which indicates self.path).
+        purge : bool, optional
+            Should detectors be purged?
         Returns
         -------
         subprocess.CompletedProcess
@@ -1275,8 +1277,9 @@ class GudrunFile:
         """
         if not path:
             path = self.path
-        if not self.purge():
-            return False
+        if purge:
+            if not self.purge():
+                return False
         try:
             gudrun_dcs = resolve("bin", "gudrun_dcs")
             result = subprocess.run(
@@ -1292,7 +1295,7 @@ class GudrunFile:
                 result = False
         return result
 
-    def process(self):
+    def process(self, purge=True):
         """
         Write out the current state of the file, then
         purge detectors and then call gudrun_dcs on the file that
@@ -1300,7 +1303,8 @@ class GudrunFile:
 
         Parameters
         ----------
-        None
+        purge : bool, optional  
+            Should detectors be purged?
         Returns
         -------
         subprocess.CompletedProcess
@@ -1308,7 +1312,7 @@ class GudrunFile:
             Can access stdout/stderr from this.
         """
         self.write_out()
-        return self.dcs(path=self.outpath)
+        return self.dcs(path=self.outpath, purge=purge)
 
     def purge(self):
         """
