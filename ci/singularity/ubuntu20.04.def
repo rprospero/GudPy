@@ -47,6 +47,7 @@ From: ubuntu:20.04
 %test
     export SINGULARITY_TEST_GUI=1
     python3.8 /opt/GudPy/gudpy
+    echo $?
     if [$? -eq 1 ]; then
         echo "Success."
     else
