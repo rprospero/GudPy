@@ -17,6 +17,7 @@ From: ubuntu:20.04
     python3.8 -m pip uninstall pip -y
     apt-get remove curl -y
     
+    export SINGULARITY_TEST_GUI_PATH=gudpy/test/TestData/NIMROD-water/water.txt
 
 %help
 
@@ -42,3 +43,12 @@ From: ubuntu:20.04
 
 %apprun GudPy
     python3.8 /opt/GudPy/gudpy
+
+%test
+    export SINGULARITY_TEST_GUI=1
+    python3.8 /opt/GudPy/gudpy
+    if [$? -eq 1 ]; then
+        echo "Success."
+    else
+        echo "Failure."
+    fi

@@ -168,6 +168,11 @@ class GudPyMainWindow(QMainWindow):
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.autosave)
 
+        if os.environ.get("SINGULARITY_TEST_GUI", False):
+            self.gudrunFile = GudrunFile(path=os.environ.get("SINGULARITY_TEST_GUI_PATH"))
+            self.updateWidgets()
+            exit(1)
+
     def initComponents(self):
         """
         Loads the UI file for the GudPyMainWindow.

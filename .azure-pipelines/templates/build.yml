@@ -89,9 +89,10 @@ steps:
   - bash: |
       VERSION=$(grep "VERSION =" gudpy.spec | sed "s/.*\"\(.*\)\"/\1/g")
       sudo singularity build dist/GudPy-$VERSION.sif ci/singularity/ubuntu20.04.def
+      export SINGULARITY_TEST_GUI_PATH=gudpy/test/TestData/NIMROD-water/water.txt
     condition: eq(variables.osName, 'linux')
     displayName: "Build singularity image"
-
+      
   - bash: |
       VERSION=$(grep "VERSION =" gudpy.spec | sed "s/.*\"\(.*\)\"/\1/g") 
       singularity remote login --username ${HARBOR_USER} --password ${HARBOR_SECRET} docker://harbor.stfc.ac.uk
